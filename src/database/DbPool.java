@@ -1,4 +1,4 @@
-package fileToDB;
+package database;
 
 import java.beans.PropertyVetoException;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
@@ -13,8 +13,8 @@ public class DbPool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ds2.setJdbcUrl("jdbc:mysql://localhost:3306/suzhou?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull");
-		ds2.setUser("root");
+		ds2.setJdbcUrl("jdbc:mysql://192.168.31.233:3306/suzhou?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull");
+		ds2.setUser("admin");
 		ds2.setPassword("8887799");	
 		//ds2.set
 		ds2.setMaxPoolSize(50);
