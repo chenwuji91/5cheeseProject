@@ -1,17 +1,20 @@
 package defineRoad;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 //https://github.com/chenwuji91/chenwuji.git
 import database.DbPool;
 
-public class Main {
+public class Main implements Runnable{
 
 	private ArrayList<carData> car;
+	private static int jj=0;
 	Main()
 	{
 		car=new ArrayList<carData>();
@@ -46,28 +49,55 @@ public class Main {
 			return this.angle;
 		}
 	}
+	public void run()
+	{
+		Main m=new Main();
+		int temp=999999;;
+		synchronized (this) {
+			for(;jj<48372;jj++)
+			temp=jj;
+			
+		}
+		
+		{
+			m.getData(temp*1000,(temp+1)*1000);
+			System.out.println(m.car.size());
+			
+			for(int i=0;i<m.car.size();i++)
+			{
+				//m.getNearby(m.car.get(i));
+				HashMap<Integer, Float> road=new HashMap<Integer, Float>();
+				int minPoint=m.getNearby(m.car.get(i),road);
+				String result=m.findRoad(minPoint,m.car.get(i).getAngle());
+				m.writeDb(m.car.get(i).getId(), result);
+			}
+			
+		}
+	}
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		DbPool.init();	
 		Main m=new Main();
-		m.getData();
-		System.out.println(m.car.size());
+		new Thread(m,"Thread 1").start();
+		new Thread(m,"Thread 2").start();
+		new Thread(m,"Thread 3").start();
+		new Thread(m,"Thread 4").start();
+		new Thread(m,"Thread 5").start();
+		new Thread(m,"Thread 6").start();
+		new Thread(m,"Thread 7").start();
+		new Thread(m,"Thread 8").start();
+		new Thread(m,"Thread 9").start();
+		new Thread(m,"Thread 10").start();
 		
-//		for(int i=0;i<m.car.size();i++)
-//		{
-//			m.getNearby(m.car.get(i));
-//		}
-		HashMap<Integer, Float> road=new HashMap<Integer, Float>();
-		int minPoint=m.getNearby(m.car.get(38),road);
-		m.findRoad(minPoint,m.car.get(38).getAngle());
+		
 
 	}
-	private void getData(){
+	private void getData(int beginIndex,int endIndex){
 		try {
 			Connection conn=DbPool.ds2.getConnection();
 			Statement stmt=conn.createStatement();
-			ResultSet rs=stmt.executeQuery("select carId,latitude,longitude,angle from suzhou.car where index1>0 and index1<100");
+			ResultSet rs=stmt.executeQuery("select carId,latitude,longitude,angle from suzhou.car where index1>"+beginIndex+" and index1<"+endIndex);
 			while(rs.next())
 			{
 				int carId=rs.getInt(1);
@@ -132,7 +162,7 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("hello+"+this.cAngle(angle,minPoint, n1, n2, n3, n4));
+		System.out.println("最终的返回结果是："+this.cAngle(angle,minPoint, n1, n2, n3, n4));
 		return this.cAngle(angle,minPoint, n1, n2, n3, n4);
 		 
 	}
@@ -141,26 +171,28 @@ public class Main {
     {
     	if(angle>180)
     		angle=angle-180;
-    	System.out.println("n value"+minPoint+" "+n1+" "+n2+" "+n3+" "+n4+" "+angle);
+    	System.out.println("计算角度的时候，传入进来的临近点的ID是："+" "+n1+" "+n2+" "+n3+" "+n4+" 最后的行车的角度是"+angle+"当前点"+minPoint);
     	int angle1=getPosi(minPoint, n1);
     	int angle2=getPosi(minPoint, n2);
     	int angle3=getPosi(minPoint, n3);
     	int angle4=getPosi(minPoint, n4);
-    	System.out.println("anglre"+angle1+" "+angle2+" "+angle3+" "+angle4+" "+angle);
-    	int min=999;
+    	System.out.println("计算得到的四个相邻路口的角度是"+angle1+" "+angle2+" "+angle3+" "+angle4+" "+angle);
+    	int min=999;int min2=999;
     	if(Math.abs(angle-angle1)<min)
-    		min=n1;
+    		{min=Math.abs(angle-angle1);min2=n1;}
     	if(Math.abs(angle-angle2)<min)
-    		min=n2;
+    		{min=Math.abs(angle-angle2);min2=n2;}
     	if(Math.abs(angle-angle3)<min)
-    		min=n3;
+    		{Math.abs(angle-angle3);min2=n3;}
     	if(Math.abs(angle-angle4)<min)
-    		min=n4;
-    	return minPoint+"+"+min;
+    		{Math.abs(angle-angle4);min2=n4;}
+    	return minPoint+"+"+min2;
     }
 	private int getPosi(int minPoint,int n)
 	{
-		System.out.println("Begin:"+minPoint+" "+n);
+		//System.out.println("Begin:"+minPoint+" "+n);
+		if(n==0)
+			return 90999;
 		float latitude1=0,latitude2=0;
 		float longitude1=0,longitude2=0;
 		try {
@@ -196,7 +228,28 @@ public class Main {
 			return 9999;
 		System.out.println("la1:"+latitude1+"la2:"+latitude2+"lg1:"+longitude1+"lg2:"+longitude2+"mm:"+(latitude1-latitude2)/(longitude1-longitude2)+"__"+Math.toDegrees(Math.atan(((latitude1-latitude2)/(longitude1-longitude2)))));
 		int angle=(int) Math.toDegrees(Math.atan(((latitude1-latitude2)/(longitude1-longitude2))));
-		return angle>0?angle:(180+angle);
+		angle=angle>0?angle:(180+angle);
+		angle=angle<90?angle:(Math.abs((angle-180)));
+		System.out.println("最后返回的结果是"+angle);
+		return angle;
+	}
+	
+	private void writeDb(int carId,String result)
+	{
+		Connection conn;
+		try {
+			conn = DbPool.ds2.getConnection();
+			PreparedStatement prestmt=conn.prepareStatement("insert into suzhou.position(idposition,position) values(?,?)");
+			prestmt.setInt(1, carId);
+			prestmt.setString(2, result);
+			prestmt.executeUpdate();
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+    			
 		
 	}
 	
