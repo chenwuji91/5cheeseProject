@@ -3,7 +3,8 @@ package cwj.roadInfo;
 /**
  * 
  * @author chenwuji
- * 程序的主要目的是为了计算邻接矩阵  从而求出相邻节点之间具体的距离
+ * @E_mail 53996386@qq.com
+ * @description 程序的主要目的是为了计算邻接矩阵  从而求出相邻节点之间具体的距离
  * 使用MVC标准的模式来实现
  */
 
@@ -19,11 +20,11 @@ import defineRoad.Calculate;
 public class Main {
 	private static ArrayList<Data> dataStore=new ArrayList<Data>();
 	private static ArrayList<Result> result=new ArrayList<Result>();
-//	Main()
-//	{
-//		dataStore=new ArrayList<Data>();
-//		result=new ArrayList<Result>();
-//	}
+	Main()
+	{
+		dataStore=new ArrayList<Data>();
+		result=new ArrayList<Result>();
+	}
 	
 	public static void main(String args[])
 	{
@@ -60,7 +61,7 @@ public class Main {
 			Point point1=database.queryInfo(new Point(id1));
 			Point point2=database.queryInfo(new Point(id2));
 			result.set(i, result.get(i).setDetails(point1.getLati(), point2.getLati(), point1.getLongi(), 
-					point2.getLongi(),(float) Calculate.getDistance(point1.getLati(),point1.getLongi(), point2.getLati(), point2.getLongi())));	
+					point2.getLongi(),(double) Calculate.getDistance(point1.getLati(),point1.getLongi(), point2.getLati(), point2.getLongi())));	
 		}
 		//结果集插入回数据库
 		System.out.println("计算全部完成，进入结果保存阶段");
@@ -106,7 +107,7 @@ class Data{
 }
 class Result{
 	private int id1,id2;
-	private float lati1,lati2,longi1,longi2,dis;
+	private double lati1,lati2,longi1,longi2,dis;
 	Result(int id1,int id2){
 		this.id1=id1;
 		this.id2=id2;
@@ -119,7 +120,7 @@ class Result{
 	{
 		return this.id2;
 	}
-	public Result setDetails(float lati1,float lati2,float longi1,float longi2,float dis)
+	public Result setDetails(double lati1,double lati2,double longi1,double longi2,double dis)
 	{
 		this.lati1=lati1;
 		this.longi1=longi1;
@@ -128,23 +129,23 @@ class Result{
 		this.dis=dis;
 		return this;
 	}
-	public float getLati1()
+	public double getLati1()
 	{
 		return lati1;
 	}
-	public float getLati2()
+	public double getLati2()
 	{
 		return lati2;
 	}
-	public float getLongi1()
+	public double getLongi1()
 	{
 		return longi1;
 	}
-	public float getLongi2()
+	public double getLongi2()
 	{
 		return longi2;
 	}
-	public float getDis()
+	public double getDis()
 	{
 		return dis;
 	}
@@ -181,11 +182,14 @@ class DB{
 		try {
 			conn = DbPool.ds2.getConnection();
 			Statement stmt=conn.createStatement();
-			ResultSet rs=stmt.executeQuery("select id1,latitude,longitude from suzhou.road1 where id1="+point.getId());
+			int clean0=point.getId();//这里的步骤相当于打补丁
+			if(clean0==-1)
+				clean0=0;
+			ResultSet rs=stmt.executeQuery("select id1,latitude,longitude from suzhou.road1 where id1="+clean0);
 			while(rs.next())
 			{
 				int id=rs.getInt(1);
-				point.setPoint(rs.getFloat(2), rs.getFloat(3));
+				point.setPoint(rs.getDouble(2), rs.getDouble(3));
 			}
 			conn.close();
 		} catch (SQLException e) {
@@ -203,11 +207,11 @@ class DB{
 			PreparedStatement prst=conn.prepareStatement("insert into road3(id1,id2,lati1,longi1,lati2,longi2,dis) values(?,?,?,?,?,?,?)");
 			prst.setInt(1, result.getId1());
 			prst.setInt(2, result.getId2());
-			prst.setFloat(3, result.getLati1());
-			prst.setFloat(4, result.getLongi1());
-			prst.setFloat(5, result.getLati2());
-			prst.setFloat(6, result.getLongi2());
-			prst.setFloat(7, result.getDis());
+			prst.setDouble(3, result.getLati1());
+			prst.setDouble(4, result.getLongi1());
+			prst.setDouble(5, result.getLati2());
+			prst.setDouble(6, result.getLongi2());
+			prst.setDouble(7, result.getDis());
 			
 			prst.executeUpdate();
 			conn.close();
@@ -222,12 +226,12 @@ class DB{
 }
 class Point{
 	private int id;
-	private float lati;
-	private float longi;
+	private double lati;
+	private double longi;
 	Point(int id){
 		this.id=id;
 	}
-	public void setPoint(float lati,float longi)
+	public void setPoint(double lati,double longi)
 	{
 		this.lati=lati;
 		this.longi=longi;
@@ -235,10 +239,10 @@ class Point{
 	public int getId(){
 		return id;
 	}
-	public float getLati(){
+	public double getLati(){
 		return lati;
 	}
-	public float getLongi(){
+	public double getLongi(){
 		return longi;
 	}
 }
