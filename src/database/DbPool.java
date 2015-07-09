@@ -13,7 +13,7 @@ public class DbPool {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ds2.setJdbcUrl("jdbc:mysql://192.168.31.233:3306/suzhou?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull");
+		ds2.setJdbcUrl("jdbc:mysql://192.168.1.199:3306/suzhou?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull");
 		ds2.setUser("admin");
 		ds2.setPassword("8887799");	
 		//ds2.set
