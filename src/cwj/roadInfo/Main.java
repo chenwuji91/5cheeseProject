@@ -112,10 +112,72 @@ class Result{
 		this.id1=id1;
 		this.id2=id2;
 	}
+	
+	public Result(int id1, int id2, double lati1, double lati2, double longi1,
+			double longi2, double dis) {
+		super();
+		this.id1 = id1;
+		this.id2 = id2;
+		this.lati1 = lati1;
+		this.lati2 = lati2;
+		this.longi1 = longi1;
+		this.longi2 = longi2;
+		this.dis = dis;
+	}
+
 	public int getId1()
 	{
 		return this.id1;
 	}
+	/**
+	 * @param id1 the id1 to set
+	 */
+	public void setId1(int id1) {
+		this.id1 = id1;
+	}
+
+	/**
+	 * @param id2 the id2 to set
+	 */
+	public void setId2(int id2) {
+		this.id2 = id2;
+	}
+
+	/**
+	 * @param lati1 the lati1 to set
+	 */
+	public void setLati1(double lati1) {
+		this.lati1 = lati1;
+	}
+
+	/**
+	 * @param lati2 the lati2 to set
+	 */
+	public void setLati2(double lati2) {
+		this.lati2 = lati2;
+	}
+
+	/**
+	 * @param longi1 the longi1 to set
+	 */
+	public void setLongi1(double longi1) {
+		this.longi1 = longi1;
+	}
+
+	/**
+	 * @param longi2 the longi2 to set
+	 */
+	public void setLongi2(double longi2) {
+		this.longi2 = longi2;
+	}
+
+	/**
+	 * @param dis the dis to set
+	 */
+	public void setDis(double dis) {
+		this.dis = dis;
+	}
+
 	public int getId2()
 	{
 		return this.id2;
