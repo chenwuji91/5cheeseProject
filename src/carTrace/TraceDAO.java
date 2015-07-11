@@ -16,6 +16,10 @@ public class TraceDAO {
 	private int speed2;
 	private Timestamp timestamp1;
 	private Timestamp timestamp2;
+	private int nextPoint1;
+	private int nextPoint2;
+	private int lastPoint1;
+	private int lastPoint2;
 	
 	public TraceDAO(Node n1, Node n2) {
 		// TODO Auto-generated constructor stub
@@ -29,6 +33,74 @@ public class TraceDAO {
 		this.angle2=n2.getAngle();
 		this.timestamp1=n1.getTimeStamp();
 		this.timestamp2=n2.getTimeStamp();
+		this.nextPoint1=n1.getNextPoint();
+		this.nextPoint2=n2.getNextPoint();
+		this.lastPoint1=n1.getLastPoint();
+		this.lastPoint2=n2.getLastPoint();
+		
+	}
+
+	/**
+	 * @return the nextPoint1
+	 */
+	public int getNextPoint1() {
+		return nextPoint1;
+	}
+
+	/**
+	 * @param nextPoint1 the nextPoint1 to set
+	 */
+	public void setNextPoint1(int nextPoint1) {
+		this.nextPoint1 = nextPoint1;
+	}
+
+	/**
+	 * @return the nextPoint2
+	 */
+	public int getNextPoint2() {
+		return nextPoint2;
+	}
+
+	/**
+	 * @param nextPoint2 the nextPoint2 to set
+	 */
+	public void setNextPoint2(int nextPoint2) {
+		this.nextPoint2 = nextPoint2;
+	}
+
+	/**
+	 * @return the lastPoint1
+	 */
+	public int getLastPoint1() {
+		return lastPoint1;
+	}
+
+	/**
+	 * @param lastPoint1 the lastPoint1 to set
+	 */
+	public void setLastPoint1(int lastPoint1) {
+		this.lastPoint1 = lastPoint1;
+	}
+
+	/**
+	 * @return the lastPoint2
+	 */
+	public int getLastPoint2() {
+		return lastPoint2;
+	}
+
+	/**
+	 * @param lastPoint2 the lastPoint2 to set
+	 */
+	public void setLastPoint2(int lastPoint2) {
+		this.lastPoint2 = lastPoint2;
+	}
+
+	/**
+	 * @param longitude1 the longitude1 to set
+	 */
+	public void setLongitude1(double longitude1) {
+		this.longitude1 = longitude1;
 	}
 
 	/**

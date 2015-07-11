@@ -15,6 +15,9 @@ public class Node {
 	private int roadIndex;
 	private int nextPoint;
 	private int lastPoint;
+	
+	private int beginPoint;
+
 	Node(int carID,double lati,double longi,int speed,int angle,String time,int occupy1,int occupy2,double dis)
 	{
 		this.carID=carID;
