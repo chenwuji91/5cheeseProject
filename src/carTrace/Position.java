@@ -21,12 +21,33 @@ public class Position {
 	 * @description 本方法主要传入两个位置信息，处理完成后保存所在的路段信息
 	 * @description 本类的控制器
 	 */
-	public void definePosition(Node n)
+	public boolean definePosition(Node n)
 	{
 		TreeMap<Float,Integer> val=getNearby(n);//得到距离当前最近的点
-		int min=val.get(val.firstKey());
-		val.pollFirstEntry();
-		int mid=val.get(val.firstKey());
+		int min,mid;
+		try{
+			min=val.get(val.firstKey());
+			val.pollFirstEntry();
+			mid=val.get(val.firstKey());
+		}
+		catch(java.util.NoSuchElementException e)//处理没有找到的情况
+		{
+			
+			TreeMap<Float,Integer> val1=getNearby1(n);//得到距离当前最近的点
+			try{
+				System.out.println("没找到邻居");
+				System.out.println(n.getLati()+" "+n.getLongi());
+				min=val.get(val.firstKey());
+			}
+			catch(java.util.NoSuchElementException e2)
+			{
+				return false;
+			}
+			val.pollFirstEntry();
+			mid=val.get(val.firstKey());
+			//return;
+		}
+		
 		ArrayList<Integer> neighbour=findRoad(min, n);//得到每个路口周围的四个邻节点,已经进行去null处理，返回的是真实的邻居数
 		//System.out.println("最小点："+min+"，中间点："+mid+",相邻点："+neighbour);
 		TreeMap<Double,Integer> neighbourK=calculateAngle(neighbour,min, n);//返回计算的几个夹角与n的差值，并按由小到大排序， pullfirst找出最小的
@@ -45,7 +66,7 @@ public class Position {
 			n.setNextPoint(min);
 			n.setLastPoint(min2);
 		}
-			
+		return true;	
 		//根据夹角来选出夹角最近的两个路
 //		TreeMap<Double,Integer> angle=
 	}
@@ -181,6 +202,50 @@ public class Position {
 		
 	}
 	
+	
+	/**
+	 * 此函数做异常处理使用，用来处理没有找到的情况，放大范围
+	 * @param n
+	 * @return
+	 */
+	private TreeMap<Float,Integer> getNearby1(Node n){
+		//System.out.println(n.getCarID());
+		
+		TreeMap<Float,Integer> val=new TreeMap<Float,Integer>();
+		try {
+			Connection conn=DbPool.ds2.getConnection();
+			Statement stmt=conn.createStatement();
+			ResultSet rs=stmt.executeQuery("SELECT * FROM suzhou.road1 where"
+					+ " road1.latitude>"+(n.getLati()-0.05)+" and "
+					+ "road1.latitude<"+(n.getLati()+0.05)+" and "
+					+ "road1.longitude>"+(n.getLongi()-0.05)+" and "
+					+ "road1.longitude<"+(n.getLongi()+0.05)+";");
+			float temp1=99999,temp2=99999;
+			
+			while(rs.next())
+			{
+				int resultId=rs.getInt(1);
+				float latitude=rs.getFloat(3);
+				float longitude=rs.getFloat(4);
+				//System.out.println("ID"+resultId+" "+latitude+" "+longitude);
+				temp1=(float) Calculate.getDistance(latitude, longitude, n.getLati(),n.getLongi());	
+				//System.out.println(temp1);
+				val.put(temp1,resultId);
+//				if(temp1<temp2)
+//					min=resultId;
+			}
+//			System.out.println(val);
+//			System.out.println("pull first"+val.pollFirst());
+//			System.out.println("pull last"+val.pollLast());
+//			System.out.println(val);
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return val;
+	}
 	
 
 }

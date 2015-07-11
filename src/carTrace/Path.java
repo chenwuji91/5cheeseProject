@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import database.DbPool;
 
@@ -19,6 +20,7 @@ public class Path {
 	private TraceDAO trace;
 	private int begin;
 	private int end;
+	private PathDB db;
 	private ArrayList<ArrayList<Integer>> allPath;
 	public Path(TraceDAO trace) {
 		// TODO Auto-generated constructor stub
@@ -26,18 +28,48 @@ public class Path {
 		begin=trace.getNextPoint1();
 		end=trace.getLastPoint2();
 		allPath=new ArrayList<ArrayList<Integer>>();
+		db=new PathDB();
 	}
-	
+	/**
+	 * @description 该类的主方法 控制器
+	 * @return
+	 */
 	public ArrayList<Integer> search()
 	{
 		ArrayList<Integer> onePath=new ArrayList<Integer>();
 		System.out.println("前起点"+this.begin+",终点："+this.end);
 		DFS(onePath,begin,0);
 		System.out.println(allPath);
-		return allPath.get(0);//实际要搜索实际权值最小的路径
+		//在搜索到的路径里面找出最优的路径
+		TreeMap <Integer,Integer> distance=new TreeMap<Integer,Integer>();
+		for(int i=0;i<allPath.size();i++)
+		{
+			distance.put(calculate(allPath.get(i)), i);
+		}
+		if(distance.isEmpty())
+			return null;
+		return allPath.get(distance.get(distance.firstKey()));//实际要搜索实际权值最小的路径
 	}
 	
 	
+	/**
+	 * 
+	 * @param path
+	 * @return 返回某一段路程的全部距离
+	 */
+	private int calculate(ArrayList<Integer> path) {
+		// TODO Auto-generated method stub
+		int count=0;
+		for(int i=0;i<path.size()-1;i++)
+		{
+			count=count+db.getDis(path.get(i), path.get(i+1));
+		}
+		System.out.println("这段路距离是"+count);
+		return count;
+		
+	}
+	
+
 	private void DFS(ArrayList<Integer> onepath,int now,int deep)
 	{
 		
@@ -50,23 +82,38 @@ public class Path {
 			//System.out.println("all path"+allPath);
 			ArrayList<Integer> temp=(ArrayList<Integer>) onepath.clone();
 			allPath.add(temp);//成环，把已经成环的放到里面去	
-			onepath.remove(onepath.size()-1);
-			onepath.remove(onepath.size()-1);
+			try{
+				onepath.remove(onepath.size()-1);
+				onepath.remove(onepath.size()-1);
+			}
+			catch(java.lang.ArrayIndexOutOfBoundsException e)
+			{
+				System.out.println("边界问题");
+				return;
+			}
 			
 			return;
 		}
-		if(deep>5)//遍历深度达到10 返回调用处
+		if(deep>3)//遍历深度达到10 返回调用处
 		{
 			//System.out.println("啊哦，没找到："+onepath);
 			//onepath=null;
-			onepath.remove(onepath.size()-1);
+			try{
+				onepath.remove(onepath.size()-1);
+			}
+			catch(java.lang.ArrayIndexOutOfBoundsException e)
+			{
+				System.out.println("边界问题");
+				return;
+			}
+			
 			//deep--;
 			return;
 		}
 		//onepath.add(now);
 		deep=deep+1;
 		//考虑此处将元素加入集合
-		ArrayList<Integer> neighbour=findRoad(now);
+		ArrayList<Integer> neighbour=db.findRoad(now);
 		
 		for(int i=0;i<neighbour.size();i++)
 		{
@@ -89,34 +136,6 @@ public class Path {
 		
 	}
 
-	private ArrayList<Integer> findRoad(int min)
-	{
-		int n1,n2,n3,n4;
-		n1=n2=n3=n4=-2;
-		
-		try {
-			Connection conn=DbPool.ds2.getConnection();
-			Statement stmt=conn.createStatement();
-			ResultSet rs=stmt.executeQuery("SELECT * FROM suzhou.road2 where id1="+min);	
-			if(rs.next())
-			{
-				n1=rs.getInt(2);
-				n2=rs.getInt(3);
-				n3=rs.getInt(4);
-				n4=rs.getInt(5);	
-			}
-			conn.close();
-		} catch (SQLException e) { 
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ArrayList<Integer> neighbour=new ArrayList<Integer>();
-		if(n1!=0)neighbour.add(n1);
-		if(n2!=0)neighbour.add(n2);
-		if(n3!=0)neighbour.add(n3);
-		if(n4!=0)neighbour.add(n4);
-		return neighbour;
-	}
-	
+
 
 }

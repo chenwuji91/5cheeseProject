@@ -30,6 +30,40 @@ public class Node {
 		this.occupy2=occupy2;
 		this.dis=dis;
 	}
+	
+	
+	/**
+	 * @return the occupy1
+	 */
+	public int getOccupy1() {
+		return occupy1;
+	}
+
+
+	/**
+	 * @param occupy1 the occupy1 to set
+	 */
+	public void setOccupy1(int occupy1) {
+		this.occupy1 = occupy1;
+	}
+
+
+	/**
+	 * @return the occupy2
+	 */
+	public int getOccupy2() {
+		return occupy2;
+	}
+
+
+	/**
+	 * @param occupy2 the occupy2 to set
+	 */
+	public void setOccupy2(int occupy2) {
+		this.occupy2 = occupy2;
+	}
+
+
 	public int getCarID() {
 		return carID;
 	}
