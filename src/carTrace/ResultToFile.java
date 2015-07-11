@@ -26,13 +26,13 @@ public class ResultToFile {
 		this.n2 = n2;
 	}
 	
-	public void outPut(){
+	public void outPut(String outpath){
 		int time=(int) (n2.getTimeStamp().getTime()-n1.getTimeStamp().getTime())/1000;
 		System.out.println("时间间隔"+time);
 		if(path==null)
 		{
 			dealEmpty(time);
-			ToFile();
+			ToFile(outpath);
 			return;
 		}
 
@@ -40,7 +40,7 @@ public class ResultToFile {
 		float speed=distance/time;
 		this.ToNode(distance,time);
 		System.out.println(result.size());
-		ToFile();
+		ToFile(outpath);
 		
 		
 	}
@@ -237,11 +237,11 @@ public class ResultToFile {
 				//结束
 	}
 	
-	private void ToFile()
+	private void ToFile(String outpath)
 	{
 		FileWriter writer;
 		try {
-			writer = new FileWriter("D:\\suzhou\\20120301\\1033(2).txt",true);
+			writer = new FileWriter(outpath+"change",true);
 			BufferedWriter buffer = new BufferedWriter(writer); 
 			StringBuilder sb = new StringBuilder(); 
 	 

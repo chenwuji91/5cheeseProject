@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 public class ReadFile {
 		
-        public ArrayList<Node> getData(ArrayList<Node> node) {
-                File file=new File("D:\\suzhou\\20120301\\1033.txt");  //我的文件在C盘下
+        public ArrayList<Node> getData(ArrayList<Node> node,String path) {//"D:\\suzhou\\20120301\\1033.txt"
+                File file=new File(path);  //我的文件在C盘下
                 //String content=
                 String text=readToString(file);
                 String line[]=text.split("\n");

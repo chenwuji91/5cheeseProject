@@ -27,8 +27,8 @@ public class Position {
 		int min,mid;
 		try{
 			min=val.get(val.firstKey());
-			val.pollFirstEntry();
-			mid=val.get(val.firstKey());
+//			val.pollFirstEntry();
+//			mid=val.get(val.firstKey());
 		}
 		catch(java.util.NoSuchElementException e)//处理没有找到的情况
 		{
@@ -37,14 +37,14 @@ public class Position {
 			try{
 				System.out.println("没找到邻居");
 				System.out.println(n.getLati()+" "+n.getLongi());
-				min=val.get(val.firstKey());
+				min=val1.get(val1.firstKey());
 			}
 			catch(java.util.NoSuchElementException e2)
 			{
 				return false;
 			}
-			val.pollFirstEntry();
-			mid=val.get(val.firstKey());
+			val1.pollFirstEntry();
+			//mid=val1.get(val1.firstKey());
 			//return;
 		}
 		
