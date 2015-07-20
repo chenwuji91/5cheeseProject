@@ -14,7 +14,7 @@ public class GetList {
 		{
 			if(filename[i].isFile())
 			{
-				System.out.println(filename[i]);
+				//System.out.println(filename[i]);
 				list.add(filename[i].toString());
 			}	
 			else if(filename[i].isDirectory())

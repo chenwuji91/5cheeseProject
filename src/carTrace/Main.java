@@ -12,7 +12,7 @@ public class Main {
 		GetList filelist=new GetList();
 		ArrayList<String> list=filelist.getList("D:\\suzhou\\20120301");
 		DbPool.init();
-		for(int kk=0;kk<list.size();kk++)
+		for(int kk=1;kk<list.size();kk++)
 		{
 		try{
 		ReadFile data=new ReadFile();

@@ -33,6 +33,6 @@ public class Calculate {
     
 
     public static void main(String[] args) {
-        System.out.println(getDistance(116.32,39.98,116.33,39.99));
+        System.out.println(getDistance(116.30,39.99,116.36,39.99));
     }
 }

@@ -48,6 +48,7 @@ public class Path {
 		}
 		if(distance.isEmpty())
 			return null;
+		System.out.println("路段的最短距离:"+distance.firstKey());
 		return allPath.get(distance.get(distance.firstKey()));//实际要搜索实际权值最小的路径
 	}
 	
@@ -64,7 +65,7 @@ public class Path {
 		{
 			count=count+db.getDis(path.get(i), path.get(i+1));
 		}
-		System.out.println("这段路距离是"+count);
+		//System.out.println("这段路距离是"+count);
 		return count;
 		
 	}
@@ -88,13 +89,13 @@ public class Path {
 			}
 			catch(java.lang.ArrayIndexOutOfBoundsException e)
 			{
-				System.out.println("边界问题");
+				//System.out.println("边界问题");
 				return;
 			}
 			
 			return;
 		}
-		if(deep>3)//遍历深度达到10 返回调用处
+		if(deep>5)//遍历深度达到10 返回调用处
 		{
 			//System.out.println("啊哦，没找到："+onepath);
 			//onepath=null;
@@ -103,7 +104,7 @@ public class Path {
 			}
 			catch(java.lang.ArrayIndexOutOfBoundsException e)
 			{
-				System.out.println("边界问题");
+				//System.out.println("边界问题");
 				return;
 			}
 			
@@ -130,7 +131,7 @@ public class Path {
 		}
 		catch(java.lang.ArrayIndexOutOfBoundsException e)
 		{
-			System.out.println("边界问题");
+			//System.out.println("边界问题");
 			return;
 		}
 		

@@ -37,7 +37,7 @@ public class ResultToFile {
 		}
 
 		int distance=calculateDis();
-		float speed=distance/time;
+	//	float speed=distance/time;
 		this.ToNode(distance,time);
 		System.out.println(result.size());
 		ToFile(outpath);

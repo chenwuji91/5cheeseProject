@@ -29,6 +29,8 @@ public class ReadFile {
                 		e.printStackTrace();
                 		continue;
                 	}
+                	catch(java.lang.NumberFormatException e2)
+                	{continue;}
                 }
                 System.out.println(node.size());
                 return node;

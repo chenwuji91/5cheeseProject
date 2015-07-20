@@ -39,6 +39,13 @@ public class TraceDAO {
 		this.lastPoint2=n2.getLastPoint();
 		
 	}
+	public TraceDAO(int begin, int end) {
+		// TODO Auto-generated constructor stub
+		
+		this.nextPoint1=begin;
+		this.lastPoint2=end;
+		
+	}
 
 	/**
 	 * @return the nextPoint1
