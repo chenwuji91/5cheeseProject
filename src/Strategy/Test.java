@@ -16,7 +16,7 @@ public class Test {
 	 */
 	public static void main(String[] args) throws IOException, InterruptedException {
 		Point[] chesslistB = new Point[18*18];
-		Point[] chesslistW;
+		Point[] chesslistW = new Point[18*18];
 		Point NextStep;
 		
 		int stepx,stepy;
@@ -36,7 +36,7 @@ public class Test {
           /**
            * 首先黑子先落子  
            */
-        	NextStep=f.BlackNextStep(chesslistB);
+        	NextStep=f.BlackNextStep(chesslistW);
         	stepx=NextStep.getX();
         	stepy=NextStep.getY();
         	

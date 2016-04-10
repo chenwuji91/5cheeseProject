@@ -112,7 +112,65 @@ public class ChessStrategy extends JFrame {
 			 */
 			//return new Point(8,8,Color.BLACK);
 			return null;//修改返回下一步坐标点
+		}	
+}
+
+class ComputerStrategy{
+	private static int chessNow[][] = new int[18][18];
+	/**
+	 * 将棋盘转换刷新为便于检索的形式
+	 */
+	public void refreshChess(Point[] chesslist)
+	{
+		for(int i=0;i<18;i++)
+		{
+			for(int j=0;j<18;j++)
+			{
+				chessNow[i][j] = 0;//表示当前位置为空
+			}
+		}	
+		for(Point p:chesslist)
+		{
+			if(p.getColor()==Color.black)
+			{
+				chessNow[p.getX()][p.getY()] = 1;//当前位置有黑子
+			}
+			else if(p.getColor()==Color.white)
+			{
+				chessNow[p.getX()][p.getY()] =  2;//当前位置有白子
+			}
 		}
-
-
+	}
+	
+	/**
+	 * 
+	 * @param chesslist
+	 * @return 所有可以落子的位置
+	 * 搜索某一深度的一些空位，如果周围一定的范围内有棋子，认为这个位置是一个可行的位置
+	 */
+	public Point[] gen(Point[] chesslist, int deep){
+		
+		Point[] availablePoint = new Point[18*18];
+		int countAvailable = 0;
+		refreshChess(chesslist);//刷新当前棋盘棋子状态
+		for(Point p:chesslist)
+		{
+			if(p.getColor()!=Color.black&&p.getColor()!=Color.white)
+			{
+				for(int i=-deep;i<=deep;i++)
+					for(int j=-deep;j<=deep;j++)
+					{
+						if((i+j>-deep)&&(i+j<deep))
+						{
+							if(chessNow[i+j][i+j]==0)
+							{
+								availablePoint[countAvailable++] = new Point(i+j,i+j,Color.blue);
+							}
+						}
+					}
+			}
+		}	
+		return chesslist;
+	}
+	
 }
